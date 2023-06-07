@@ -1,4 +1,4 @@
-var speeds = { "slow": 1000, "fast": 50 };
+var speeds = { "slow": 1000, "fast": 100 };
 var SPEED = "slow";
 var PAUSE = true;
 
@@ -12,7 +12,7 @@ var act_codes = [
   { "index": "3", "short": "Education", "desc": "Education" },
   { "index": "4", "short": "Work", "desc": "Work and Work-Related Activities" },
   { "index": "5", "short": "Housework", "desc": "Household Activities" },
-  { "index": "6", "short": "Volunteer / Care ", "desc": "Volunteer Activities / Care for others" },
+  { "index": "6", "short": "Volunteering ", "desc": "Volunteer Activities / Care for others" },
   { "index": "7", "short": "Leisure", "desc": "Socializing, Relaxing, and Leisure" },
   { "index": "8", "short": "Sports", "desc": "Sports, Exercise, and Recreation" },
   { "index": "9", "short": "Religion", "desc": "Religious and Spiritual Activities" },
@@ -99,7 +99,7 @@ d3.tsv("d3_data.tsv", function (error, data) {
   function runVis() {
     let curr_minute = 0;
 
-    const center_pt = { x: 380, y: 280 };
+    const center_pt = { x: 420, y: 280 };
 
     const foci = {};
     const act_index = act_codes.map(code => {
@@ -107,8 +107,8 @@ d3.tsv("d3_data.tsv", function (error, data) {
         foci[code.index] = center_pt;
       } else {
         const theta = 2 * Math.PI / (act_codes.length - 1);
-        const x = 250 * Math.cos(code.index * theta) + 380;
-        const y = 220 * Math.sin(code.index * theta) + 280;
+        const x = 250 * Math.cos(code.index * theta) + 420;
+        const y = 260 * Math.sin(code.index * theta) + 310;
         foci[code.index] = { x, y };
       }
       return code.short;
@@ -117,8 +117,8 @@ d3.tsv("d3_data.tsv", function (error, data) {
     // start the SVG
     const svg = d3.select("#beehive")
       .append("svg")
-      .attr("width", 800)
-      .attr("height", 600);
+      .attr("width", 1000)
+      .attr("height", 700);
 
     const margin = { top: 40, right: 10, bottom: 160, left: 60 };
 
@@ -127,7 +127,7 @@ d3.tsv("d3_data.tsv", function (error, data) {
 
     const svg2 = d3.select("#bar-chart")
       .append("svg")
-      .attr("width", 250)
+      .attr("width", 300)
       .attr("height", 430);
 
     // used for percentages by minute
@@ -145,7 +145,7 @@ d3.tsv("d3_data.tsv", function (error, data) {
         radius: 3,
         x: init_x,
         y: init_y,
-        color: "#00cdc0",
+        color: "#000000",
         moves: 0,
         next_move_time: o[0].duration,
         schedule: o
@@ -167,7 +167,12 @@ d3.tsv("d3_data.tsv", function (error, data) {
       .append("circle")
       .attr("r", d => d.radius)
       .attr("class", "dot")
-      .on("click", d => updateTreemap(treemap_arr[d.index]));
+      .on("click", d => {
+        svg.selectAll("circle").attr("fill", "#000000");
+        d3.select(event.currentTarget).attr("fill", "#FF0000");
+        document.getElementById("treeNode").innerHTML = d.index;
+        updateTreemap(treemap_arr[d.index])
+      });
 
     // activity labels
     const label = svg.selectAll("text")
@@ -181,18 +186,26 @@ d3.tsv("d3_data.tsv", function (error, data) {
         } else {
           const theta = 2 * Math.PI / (act_codes.length - 1);
           if (d.desc === "Sleeping") {
-            return 340 * Math.cos(i * theta) + 430;
-          } else {
+            return 340 * Math.cos(i * theta) + 470;
+          } else if (d.desc === "Socializing, Relaxing, and Leisure") {
             return 340 * Math.cos(i * theta) + 380;
+          } else {
+            return 340 * Math.cos(i * theta) + 420;
           }
         }
       })
       .attr("y", (d, i) => {
         if (d.desc === "Traveling") {
-          return center_pt.y + 40;
+          return center_pt.y + 60;
         } else {
           const theta = 2 * Math.PI / (act_codes.length - 1);
-          return 260 * Math.sin(i * theta) + 280;
+          if (d.desc === "Volunteer Activities / Care for others") {
+            return 300 * Math.cos(i * theta) + 480;
+          } else if (d.desc === "Socializing, Relaxing, and Leisure") {
+            return 300 * Math.cos(i * theta) + 280;
+          } else {
+            return 300 * Math.sin(i * theta) + 320;
+          }
         }
       });
 
@@ -254,35 +267,10 @@ d3.tsv("d3_data.tsv", function (error, data) {
       updateBars(act_counts);
       updateRanking(act_counts);
 
-      // update times and sunrise status
+      // update times 
       var true_minute = curr_minute % 1440;
       var current_time = minutesToTime(true_minute)
-      var timeText = d3.select('#current_time');
-
-      // Set the initial time and data-time attribute
-      timeText.text(current_time);
-      updateTimeAttribute(current_time);
-
-      // Function to update the data-time attribute based on the time
-      function updateTimeAttribute(time) {
-        var parsedTime = time.split(':');
-        var hour = parseInt(parsedTime[0]);
-        var animation = d3.select('#animation');
-
-        if (hour >= 7 && hour < 19) {
-          timeText.attr('data-time', 'day');
-          animation.style.animation = 'day 120s linear infinite !important';
-        } else if (hour >= 19 || hour < 4) {
-          timeText.attr('data-time', 'night');
-          animation.style.animation = 'night 120s linear infinite';
-        } else if (hour === 4) {
-          timeText.attr('data-time', 'sunrise');
-          animation.style.animation = 'sunrise 120s linear infinite';
-        } else if (hour === 19) {
-          timeText.attr('data-time', 'sunset');
-          animation.style.animation = 'sunset 120s linear infinite';
-        }
-      }
+      d3.select('#current_time').text(current_time);
 
       if (!PAUSE) {
         setTimeout(timer, speeds[SPEED]);
@@ -373,8 +361,6 @@ d3.tsv("d3_data.tsv", function (error, data) {
     updateBars(act_counts);
     updateRanking(act_counts);
 
-
-
     // time controls
     d3.select("#play").style("display", "initial").on("click", function () {
       setTimeout(timer, speeds[SPEED]);
@@ -400,7 +386,7 @@ d3.tsv("d3_data.tsv", function (error, data) {
         // make sleep slower than all other activity categories
         var damper = curr_act == "0" ? 0.6 : 1;
 
-        o.color = "#00cdc0";
+        o.color = "#000000";
         o.y += (foci[curr_act].y - o.y) * k * damper;
         o.x += (foci[curr_act].x - o.x) * k * damper;
       });
@@ -460,29 +446,25 @@ d3.tsv("d3_data.tsv", function (error, data) {
           d3.select(".medium").classed("current", false);
           d3.select(".fast").classed("current", true);
         }
-
         SPEED = d3.select(this).attr("data-val");
       });
 
-    /*********************/
-    /*  Tree Map         */
-    /*********************/
-    var margin_t = { top: 40, right: 10, bottom: 10, left: 10 };
-    var width_t = 480 - margin_t.left - margin_t.right;
-    var height_t = 330 - margin_t.top - margin_t.bottom;
+    // =================================================================
+    // tree map
+    // =================================================================
 
-    var grays = ['#000000', '#1C1C1C', '#333333', '#4D4D4D',
-    '#666666', '#808080', '#999999', '#B3B3B3', '#CCCCCC', 
-    '#E6E6E6', '#F0F0F0', '#FFFFFF'];
-    var notGrays = ['#1F77B4', '#FF7F0E', '#2CA02C', '#D62728',
-      '#9467BD', '#8C564B', '#E377C2', '#7F7F7F', '#BCBD22',
-      '#17BECF', '#FFB5B8', '#B3E8FF'];
+    var margin_t = { top: 40, right: 10, bottom: 10, left: 10 };
+    var width_t = 675 - margin_t.left - margin_t.right;
+    var height_t = 260 - margin_t.top - margin_t.bottom;
 
     var color = d3.scale.ordinal()
-      .range(grays);
+      .range(['#000000', '#1C1C1C', '#333333', '#4D4D4D',
+      '#666666', '#808080', '#999999', '#B3B3B3', '#CCCCCC',
+      '#E6E6E6', '#F0F0F0', '#FFFFFF']);
     var textColor = d3.scale.ordinal()
+      // text colors to correspond so treemap is legible
       .range(['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF',
-        '#FFFFFF', '#000000', '#000000', '#000000', 
+        '#FFFFFF', '#000000', '#000000', '#000000',
         '#000000', '#000000', '#000000', '#000000'
       ]);
 
@@ -525,16 +507,15 @@ d3.tsv("d3_data.tsv", function (error, data) {
       function mouseover(d) {
         d3.select("#tooltip")
           .style("visibility", "visible")
-          .style("font-family", "'Open Sans', sans-serif")
           .html(function () {
             return d.children ? null : act_codes[d.name].short + ': ' +
               (d.value / 60).toFixed(1) + 'hrs (' + (d.value / 14.4).toFixed() + '%)';
           })
           .style("top", function () {
-            return (d3.event.pageY) + "px";
+            return (d3.event.pageY - 80) + "px";
           })
           .style("left", function () {
-            return (d3.event.pageX) + "px";
+            return (d3.event.pageX - 1100) + "px";
           });
       }
 
@@ -542,17 +523,23 @@ d3.tsv("d3_data.tsv", function (error, data) {
         this.style("left", function (d) {
           return d.x + "px";
         })
-          .style("top", function (d) {
-            return d.y + "px";
-          })
-          .style("width", function (d) {
-            return Math.max(0, d.dx - 1) + "px";
-          })
-          .style("height", function (d) {
-            return Math.max(0, d.dy - 1) + "px";
-          });
+        .style("top", function (d) {
+          return d.y + "px";
+        })
+        .style("width", function (d) {
+          return Math.max(0, d.dx - 1) + "px";
+        })
+        .style("height", function (d) {
+          return Math.max(0, d.dy - 1) + "px";
+        });
       }
     }
+
+    // call on a arbitrary single node to hint interacting to users
+    d3.select("#beehive svg :nth-child(963)").attr("fill", "#FF0000");
+    document.getElementById("treeNode").innerHTML = "963";
+    updateTreemap(treemap_arr[963]);
+
     function reset() {
       if (!PAUSE) {
         d3.select("#play").style("display", "initial");

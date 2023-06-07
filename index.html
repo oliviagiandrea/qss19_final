@@ -8,6 +8,9 @@
   <title>A Day in the Life</title>
   <link rel="stylesheet" href="./styles.css">
   <link rel="icon" href="images/running.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -34,22 +37,29 @@
         <div id="bar-chart" style="float: left"></div>
         <div id="ranking">
           <h1>Ranking of activities:</h1>
-          <p><span>01: </span><span id="1"></span></p>
-          <p><span>02: </span><span id="2"></span></p>
-          <p><span>03: </span><span id="3"></span></p>
-          <p><span>04: </span><span id="4"></span></p>
-          <p><span>05: </span><span id="5"></span></p>
-          <p><span>06: </span><span id="6"></span></p>
-          <p><span>07: </span><span id="7"></span></p>
-          <p><span>08: </span><span id="8"></span></p>
-          <p><span>09: </span><span id="9"></span></p>
-          <p><span>10: </span><span id="10"></span></p>
-          <p><span>11: </span><span id="11"></span></p>
-          <p><span>12: </span><span id="12"></span></p>
+          <div class="row">
+            <div class="col">
+              <p><span class="number">01: </span><span id="1"></span></p>
+              <p><span class="number">02: </span><span id="2"></span></p>
+              <p><span class="number">03: </span><span id="3"></span></p>
+              <p><span class="number">04: </span><span id="4"></span></p>
+              <p><span class="number">05: </span><span id="5"></span></p>
+              <p><span class="number">06: </span><span id="6"></span></p>
+            </div>
+            <div class="col">
+              <p><span class="number">07: </span><span id="7"></span></p>
+              <p><span class="number">08: </span><span id="8"></span></p>
+              <p><span class="number">09: </span><span id="9"></span></p>
+              <p><span class="number">10: </span><span id="10"></span></p>
+              <p><span class="number">11: </span><span id="11"></span></p>
+              <p><span class="number">12: </span><span id="12"></span></p>
+            </div>
+          </div>
         </div>
         <div id="tooltip"></div>
       </div>
       <div class="row treemap">
+        <h1>A day for Respondent #<span id="treeNode"></span></h1>
         <div id="treemap"></div>
       </div>
     </div>

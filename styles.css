@@ -1,5 +1,10 @@
 body {
   text-align: center;
+  font-family: 'Source Code Pro', monospace;
+}
+
+h1 {
+  font-size: 1.7rem;
 }
 
 .row {
@@ -19,6 +24,22 @@ body {
   font-weight: 600;
 }
 
+#speed {
+  display: flex;
+  margin-left: 0.5rem;
+  gap: 0.5rem;
+}
+
+.toggleButton {
+  outline: 1px solid #000;
+  border-radius: 10px;
+  padding: 0.5rem;
+}
+
+.toggleButton:hover {
+  cursor: pointer;
+}
+
 .beehive {
   width: 60%;
 }
@@ -27,12 +48,12 @@ body {
   min-height: 50vh;
 }
 
-.dot {
-  z-index: 5;
-}
-
 .dot:hover {
   cursor: pointer;
+}
+
+.selected {
+  color: mediumslateblue;
 }
 
 .other {
@@ -41,14 +62,22 @@ body {
 }
 
 .rankings {
-  height: 530px;
+  height: 380px;
 }
 
 #bar-chart {
-  width: 50%;
+  width: 48%;
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px; /* Adjust the thickness as desired */
+  shape-rendering: crispEdges;
 }
 
 #ranking {
@@ -59,8 +88,17 @@ body {
   text-align: left;
 }
 
+#ranking .row {
+  justify-content: left;
+}
+
 #ranking p {
-  margin-left: 3rem;
+  margin-left: 0.5rem;
+  margin-top: 0;
+}
+
+.number {
+  font-weight: bold;
 }
 
 #tooltip {
@@ -91,6 +129,10 @@ body {
 
 #treemap {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 70px;
+  left: 0px;
+}
+
+#treeNode {
+  color: #FF0000;
 }
