@@ -1,9 +1,8 @@
 alert(`Welcome to "A Day in an American Life"!
 
-This is my submission for QSS19 Advanced Data Visualization's final project. 
-It's a data visualization of 1000 randomly-selected American survey respondents who documented their days in the American Time Use Survey.
-
 This page is not responsive. It only looks good at certain display ratios, so please zoom out (CTRL/CMD + -) until you can see everything. 
+
+This is my submission for QSS19 Advanced Data Visualization's final project. It's a data visualization of 1000 randomly-selected American survey respondents who documented their days in the American Time Use Survey.
 `);
 
 
