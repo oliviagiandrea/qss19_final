@@ -1,0 +1,96 @@
+body {
+  text-align: center;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+#current_time {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.beehive {
+  width: 60%;
+}
+
+#beehive {
+  min-height: 50vh;
+}
+
+.dot {
+  z-index: 5;
+}
+
+.dot:hover {
+  cursor: pointer;
+}
+
+.other {
+  width: 40%;
+  position: relative;
+}
+
+.rankings {
+  height: 530px;
+}
+
+#bar-chart {
+  width: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#ranking {
+  width: 50%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: left;
+}
+
+#ranking p {
+  margin-left: 3rem;
+}
+
+#tooltip {
+  color: #454545;
+  opacity: .9;
+  background: #eee;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  position: absolute;
+  z-index: 10;
+  visibility: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.node {
+  font-size: 10px;
+  line-height: 12px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: 2px;
+}
+
+.treemap {
+  position: relative;
+}
+
+#treemap {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
