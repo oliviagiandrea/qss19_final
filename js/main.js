@@ -1,3 +1,12 @@
+alert(`Welcome to "A Day in an American Life"!
+
+This is my submission for QSS19 Advanced Data Visualization's final project. 
+It's a data visualization of 1000 randomly-selected American survey respondents who documented their days in the American Time Use Survey.
+
+This page is not responsive. It only looks good at certain display ratios, so please zoom out (CTRL/CMD + -) until you can see everything. 
+`);
+
+
 var speeds = { "slow": 1000, "fast": 100 };
 var SPEED = "slow";
 var PAUSE = true;
@@ -32,23 +41,10 @@ d3.tsv("d3_data.tsv", function (error, data) {
     // look at each comma-separated value (activity code, duration) in each line's data array
     // the durations are stored at every other comma,
     // so we only need to look at the odd values in the array
-    for (var i = 1; i < day_array.length - 1; i += 2) {
+    for (var i = 1; i <= day_array.length - 1; i += 2) {
       // the activity code (an integer) is stored at the index before the duration
       var act = day_array[i - 1];
-
-      // find the index of the first elt in the activities array 
-      // where the value at the 'act' key in the array matches act
-      var act_index = activities.findIndex(function (v) {
-        return v.act == act;
-      });
-
-      if (act_index == -1) {
-        // if activity index isn't yet in activity array, add it as a new k/v pair
-        activities.push({ 'act': act, 'duration': +day_array[i] });
-      } else {
-        // else if index already exists, just increment existing value
-        activities[act_index].duration += +day_array[i];
-      }
+      activities.push({ 'act': act, 'duration': +day_array[i] });
 
       // also push the given activity value to the treemap array 
       // thus creating each respondent's personalized plot
@@ -99,47 +95,47 @@ d3.tsv("d3_data.tsv", function (error, data) {
   function runVis() {
     let curr_minute = 0;
 
-    const center_pt = { x: 420, y: 280 };
+    var center_pt = { x: 420, y: 280 };
 
-    const foci = {};
-    const act_index = act_codes.map(code => {
+    var foci = {};
+    var act_index = act_codes.map(code => {
       if (code.desc === "Traveling") {
         foci[code.index] = center_pt;
       } else {
-        const theta = 2 * Math.PI / (act_codes.length - 1);
-        const x = 250 * Math.cos(code.index * theta) + 420;
-        const y = 260 * Math.sin(code.index * theta) + 310;
+        var theta = 2 * Math.PI / (act_codes.length - 1);
+        var x = 250 * Math.cos(code.index * theta) + 420;
+        var y = 260 * Math.sin(code.index * theta) + 310;
         foci[code.index] = { x, y };
       }
       return code.short;
     });
 
     // start the SVG
-    const svg = d3.select("#beehive")
+    var svg = d3.select("#beehive")
       .append("svg")
       .attr("width", 1000)
       .attr("height", 700);
 
-    const margin = { top: 40, right: 10, bottom: 160, left: 60 };
+    var margin = { top: 40, right: 10, bottom: 160, left: 60 };
 
-    const width2 = 300 - margin.left - margin.right;
-    const height2 = 430 - margin.top - margin.bottom;
+    var width2 = 300 - margin.left - margin.right;
+    var height2 = 430 - margin.top - margin.bottom;
 
-    const svg2 = d3.select("#bar-chart")
+    var svg2 = d3.select("#bar-chart")
       .append("svg")
       .attr("width", 300)
       .attr("height", 430);
 
     // used for percentages by minute
     // spits out an array like [{index: 0, count: 0}, {index: 1, count: 0} ... ]
-    const act_counts = Array.from({ length: 12 }, (_, index) => ({ index, count: 0 }));
+    var act_counts = Array.from({ length: 12 }, (_, index) => ({ index, count: 0 }));
 
     // initialize node for each person's schedule
-    const nodes = schedule_arr.map((o, i) => {
-      const act = o[0].act;
+    var nodes = schedule_arr.map((o, i) => {
+      var act = o[0].act;
       act_counts[+act].count += 1;
-      const init_x = foci[act].x + Math.random();
-      const init_y = foci[act].y + Math.random();
+      var init_x = foci[act].x + Math.random();
+      var init_y = foci[act].y + Math.random();
       return {
         act,
         radius: 3,
@@ -152,7 +148,7 @@ d3.tsv("d3_data.tsv", function (error, data) {
       };
     });
 
-    const force = d3.layout.force()
+    var force = d3.layout.force()
       .nodes(nodes)
       .size([800, 600])
       .gravity(0)
@@ -161,7 +157,7 @@ d3.tsv("d3_data.tsv", function (error, data) {
       .on("tick", tick)
       .start();
 
-    const circle = svg.selectAll("circle")
+    var circle = svg.selectAll("circle")
       .data(nodes)
       .enter()
       .append("circle")
@@ -175,7 +171,7 @@ d3.tsv("d3_data.tsv", function (error, data) {
       });
 
     // activity labels
-    const label = svg.selectAll("text")
+    var label = svg.selectAll("text")
       .data(act_codes)
       .enter()
       .append("text")
@@ -184,7 +180,7 @@ d3.tsv("d3_data.tsv", function (error, data) {
         if (d.desc === "Traveling") {
           return center_pt.x;
         } else {
-          const theta = 2 * Math.PI / (act_codes.length - 1);
+          var theta = 2 * Math.PI / (act_codes.length - 1);
           if (d.desc === "Sleeping") {
             return 340 * Math.cos(i * theta) + 470;
           } else if (d.desc === "Socializing, Relaxing, and Leisure") {
@@ -198,7 +194,7 @@ d3.tsv("d3_data.tsv", function (error, data) {
         if (d.desc === "Traveling") {
           return center_pt.y + 60;
         } else {
-          const theta = 2 * Math.PI / (act_codes.length - 1);
+          var theta = 2 * Math.PI / (act_codes.length - 1);
           if (d.desc === "Volunteer Activities / Care for others") {
             return 300 * Math.cos(i * theta) + 480;
           } else if (d.desc === "Socializing, Relaxing, and Leisure") {
@@ -224,58 +220,6 @@ d3.tsv("d3_data.tsv", function (error, data) {
       .attr("text-anchor", "middle")
       .attr("class", "actPct")
       .text(d => readablePercent(act_counts[d.index].count));
-
-    // update nodes based on activity and duration
-    function timer() {
-      d3.range(nodes.length).map(function (i) {
-        var curr_node = nodes[i];
-        var curr_moves = curr_node.moves;
-
-        // time to go to next activity
-        if (curr_node.next_move_time == curr_minute) {
-          if (curr_node.moves == curr_node.schedule.length - 1) {
-            curr_moves = 0;
-          } else {
-            curr_moves += 1;
-          }
-
-          // subtract from current activity count
-          act_counts[+curr_node.act].count -= 1;
-
-          // move on to next activity
-          curr_node.act = curr_node.schedule[curr_moves].act;
-
-          // add to new activity count
-          act_counts[+curr_node.act].count += 1;
-
-          curr_node.moves = curr_moves;
-          curr_node.cx = foci[curr_node.act].x;
-          curr_node.cy = foci[curr_node.act].y;
-
-          nodes[i].next_move_time += nodes[i].schedule[curr_node.moves].duration;
-        }
-      });
-
-      force.resume();
-      curr_minute += 1;
-
-      // update percentages
-      label.selectAll("tspan.actPct").text(function (d) {
-        return readablePercent(act_counts[+d.index].count);
-      });
-
-      updateBars(act_counts);
-      updateRanking(act_counts);
-
-      // update times 
-      var true_minute = curr_minute % 1440;
-      var current_time = minutesToTime(true_minute)
-      d3.select('#current_time').text(current_time);
-
-      if (!PAUSE) {
-        setTimeout(timer, speeds[SPEED]);
-      }
-    }
 
     // Scales
     var x = d3.scale.ordinal().domain(act_index).rangeRoundBands([0, width2], 0.1);
@@ -360,6 +304,58 @@ d3.tsv("d3_data.tsv", function (error, data) {
 
     updateBars(act_counts);
     updateRanking(act_counts);
+
+    // update nodes based on activity and duration
+    function timer() {
+      d3.range(nodes.length).map(function (i) {
+        var curr_node = nodes[i];
+        var curr_moves = curr_node.moves;
+
+        // time to go to next activity
+        if (curr_node.next_move_time == curr_minute) {
+          if (curr_node.moves == curr_node.schedule.length - 1) {
+            curr_moves = 0;
+          } else {
+            curr_moves += 1;
+          }
+
+          // subtract from current activity count
+          act_counts[+curr_node.act].count -= 1;
+
+          // move on to next activity
+          curr_node.act = curr_node.schedule[curr_moves].act;
+
+          // add to new activity count
+          act_counts[+curr_node.act].count += 1;
+
+          curr_node.moves = curr_moves;
+          curr_node.cx = foci[curr_node.act].x;
+          curr_node.cy = foci[curr_node.act].y;
+
+          nodes[i].next_move_time += nodes[i].schedule[curr_node.moves].duration;
+        }
+      });
+
+      force.resume();
+      curr_minute += 1;
+
+      // update percentages
+      label.selectAll("tspan.actPct").text(function (d) {
+        return readablePercent(act_counts[+d.index].count);
+      });
+
+      updateBars(act_counts);
+      updateRanking(act_counts);
+
+      // update times 
+      var true_minute = curr_minute % 1440;
+      var current_time = minutesToTime(true_minute)
+      d3.select('#current_time').text(current_time);
+
+      if (!PAUSE) {
+        setTimeout(timer, speeds[SPEED]);
+      }
+    }
 
     // time controls
     d3.select("#play").style("display", "initial").on("click", function () {
